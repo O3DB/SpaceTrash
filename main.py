@@ -18,11 +18,11 @@ def draw(canvas):
     canvas.border('|', '|')
     
     stars = animate_stars(canvas)
-    shot = fire(canvas, 20, 2)
-    spaceship = animate_spaceship(canvas, 20, 20)
+    # shot = fire(canvas, 20, 2)
+    spaceship = animate_spaceship(canvas, 20, 20, COROUTINES)
     trash_generator = fill_orbit_with_trash(canvas, COROUTINES)
   
-    COROUTINES.extend([*stars, shot, spaceship, trash_generator])
+    COROUTINES.extend([*stars, spaceship, trash_generator])
 
     while True:
         for coroutine in COROUTINES:

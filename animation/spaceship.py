@@ -10,7 +10,6 @@ from .curses_tools import (
 )
 from .physics import update_speed
 from .fire import fire
-from ..main import COROUTINES
 
 PHYSICS = {
     'row_speed': 0,
@@ -20,7 +19,7 @@ PHYSICS = {
 SPACESHIP_FRAMES = upload_sprite('rocket')
 # SPACESHIP_FRAME = '12'
 
-async def animate_spaceship(canvas, start_row, start_column):
+async def animate_spaceship(canvas, start_row, start_column, coroutines):
     """Display animation of spaceship"""
     row, column = start_row, start_column
     max_row, max_column = canvas.getmaxyx()
@@ -54,8 +53,8 @@ async def animate_spaceship(canvas, start_row, start_column):
         draw_frame(canvas, round(row), round(column), spaceship_frame, negative=True)
 
         if space_pressed:
-            shot = fire(canvas, row, column)
-            COROUTINES.append(shot)
+            shot = fire(canvas, row, column + 2)
+            coroutines.append(shot)
 
 
 
