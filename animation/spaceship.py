@@ -9,6 +9,8 @@ from .curses_tools import (
     adjust_sprite_position,
 )
 from .physics import update_speed
+from .fire import fire
+from ..main import COROUTINES
 
 PHYSICS = {
     'row_speed': 0,
@@ -50,6 +52,11 @@ async def animate_spaceship(canvas, start_row, start_column):
         draw_frame(canvas, round(row), round(column), spaceship_frame)
         await asyncio.sleep(0)
         draw_frame(canvas, round(row), round(column), spaceship_frame, negative=True)
+
+        if space_pressed:
+            shot = fire(canvas, row, column)
+            COROUTINES.append(shot)
+
 
 
 def update_spaceship_frame():
