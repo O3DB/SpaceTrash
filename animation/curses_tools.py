@@ -102,7 +102,8 @@ def upload_sprite(sprite_name, dirname='sprites'):
 def adjust_sprite_position(
     max_row, max_column,
     sprite_hight, sprite_width,
-    current_row, current_column):
+    current_row, current_column
+):
     #check top
     if current_row < 1:
         current_row = 1
