@@ -1,0 +1,60 @@
+import asyncio
+import curses
+
+from .curses_tools import (
+    upload_sprite,
+    draw_frame,
+    read_controls,
+    get_frame_size,
+    adjust_sprite_position,
+)
+
+
+SPACESHIP_FRAMES = upload_sprite('rocket')
+# SPACESHIP_FRAME = '12'
+
+async def animate_spaceship(canvas, start_row, start_column, speed=5):
+    """Display animation of spaceship"""
+    row, column = start_row, start_column
+    max_row, max_column = canvas.getmaxyx()
+        
+    while True:
+        global SPACESHIP_FRAMES
+        spaceship_frame = SPACESHIP_FRAMES[0]
+        update_spaceship_frame()
+        sprite_hight, sprite_width = get_frame_size(spaceship_frame)
+        
+        #readcontrols
+        d_row, d_column, space_pressed = read_controls(canvas)
+        row += d_row * speed
+        column += d_column * speed
+        #validate position and make corrections
+        row, column = adjust_sprite_position(
+            max_row, max_column,
+            sprite_hight, sprite_width,
+            row, column
+        )
+        #draw frames
+        draw_frame(canvas, round(row), round(column), spaceship_frame)
+        await asyncio.sleep(0)
+        draw_frame(canvas, round(row), round(column), spaceship_frame, negative=True)
+
+
+def update_spaceship_frame():
+    """
+    Modify global variable SHPACESHIP_FRAMES:
+    moves frames inside list as carousel
+    """
+    global SPACESHIP_FRAMES
+    frame = SPACESHIP_FRAMES.pop(0)
+    SPACESHIP_FRAMES.append(frame)
+
+
+# async def animate_spaceship(canvas, start_row, start_column, speed=5):
+#     while True:
+#         await run_spaceship(canvas, start_row, start_column, speed)
+#         await update_spaceship_frame()
+
+
+
+    
