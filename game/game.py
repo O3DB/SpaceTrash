@@ -8,10 +8,7 @@ from animation.stars import animate_stars
 from animation.trash import fill_orbit_with_trash
 from animation.curses_tools import upload_sprite
 
-COROUTINES = []
-OBSTACLES = []
-
-
+from animation import COROUTINES
 
 def draw(canvas):
     curses.curs_set(False)
@@ -20,8 +17,8 @@ def draw(canvas):
     
     stars = animate_stars(canvas)
     # shot = fire(canvas, 20, 2)
-    spaceship = animate_spaceship(canvas, 20, 20, COROUTINES)
-    trash_generator = fill_orbit_with_trash(canvas, COROUTINES)
+    spaceship = animate_spaceship(canvas, 20, 20)
+    trash_generator = fill_orbit_with_trash(canvas)
   
     COROUTINES.extend([*stars, spaceship, trash_generator])
 

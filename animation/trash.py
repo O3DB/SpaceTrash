@@ -9,8 +9,8 @@ from .curses_tools import (
     get_frame_size,
 )
 from .obstacles import Obstacle, show_obstacles
-#remove then
-obstacles = []
+from . import COROUTINES
+from . import OBSTACLES
 
 
 async def fly_trash(canvas, column, garbage_frame, speed=0.5):
@@ -24,26 +24,26 @@ async def fly_trash(canvas, column, garbage_frame, speed=0.5):
 
     while row < rows_number:
         draw_frame(canvas, row, column, garbage_frame)
-        obstacles.append(Obstacle(row, column, *get_frame_size(garbage_frame)))
+        OBSTACLES.append(Obstacle(row, column, *get_frame_size(garbage_frame)))
         await asyncio.sleep(0)
         draw_frame(canvas, row, column, garbage_frame, negative=True)
         row += speed
-        obstacles.pop(0)
+        OBSTACLES.pop(0)
 
 
 
-async def fill_orbit_with_trash(canvas, coroutines, speed=20):
+async def fill_orbit_with_trash(canvas, speed=20):
     """Generate trash flow"""
     trash_sprites = upload_sprite('trash')
     max_row, max_column = canvas.getmaxyx()
 
     #remove then
-    coroutines.append(show_obstacles(canvas, obstacles))
+    COROUTINES.append(show_obstacles(canvas, OBSTACLES))
     while True:
         sprite = random.choice(trash_sprites)
         start_column = random.randint(1, max_column - 1)
 
         coroutine = fly_trash(canvas, start_column, sprite)
-        coroutines.append(coroutine)
+        COROUTINES.append(coroutine)
 
         await sleep(speed)
