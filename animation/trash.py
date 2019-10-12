@@ -10,7 +10,8 @@ from .curses_tools import (
 )
 from .obstacles import Obstacle, show_obstacles
 from . import COROUTINES
-from . import OBSTACLES
+from . import OBSTACLES, OBSTACLES_IN_LAST_COLLISION
+from .explosion import explode
 
 
 async def fly_trash(canvas, column, garbage_frame, speed=0.5):
@@ -24,11 +25,17 @@ async def fly_trash(canvas, column, garbage_frame, speed=0.5):
 
     while row < rows_number:
         draw_frame(canvas, row, column, garbage_frame)
-        OBSTACLES.append(Obstacle(row, column, *get_frame_size(garbage_frame)))
+        obstacle = Obstacle(row, column, *get_frame_size(garbage_frame))
+        OBSTACLES.append(obstacle)
         await asyncio.sleep(0)
         draw_frame(canvas, row, column, garbage_frame, negative=True)
         row += speed
         OBSTACLES.pop(0)
+        if obstacle in OBSTACLES_IN_LAST_COLLISION:
+            OBSTACLES_IN_LAST_COLLISION.remove(obstacle)
+            COROUTINES.append(explode(canvas, *obstacle.get_center()))
+            return
+
 
 
 

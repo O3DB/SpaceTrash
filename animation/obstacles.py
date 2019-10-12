@@ -22,6 +22,11 @@ class Obstacle:
     def dump_bounding_box(self):
         row, column = self.get_bounding_box_corner_pos()
         return row, column, self.get_bounding_box_frame()
+
+    def get_center(self):
+        center_row = self.row + self.rows_size // 2 + 2
+        center_column = self.column + self.columns_size // 2 - 2
+        return center_row, center_column
         
     def has_collision(self, obj_corner_row, obj_corner_column, obj_size_rows=1, obj_size_columns=1):
         '''Determine if collision has occured. Return True or False.'''

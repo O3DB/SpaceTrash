@@ -10,7 +10,8 @@ from .curses_tools import (
 )
 from .physics import update_speed
 from .fire import fire
-from . import COROUTINES
+from . import COROUTINES, OBSTACLES
+from .gameover import show_gameover
 
 PHYSICS = {
     'row_speed': 0,
@@ -30,7 +31,7 @@ async def animate_spaceship(canvas, start_row, start_column):
         global PHYSICS
         spaceship_frame = SPACESHIP_FRAMES[0]
         update_spaceship_frame()
-        sprite_hight, sprite_width = get_frame_size(spaceship_frame)
+        rocket_hight, rocket_width = get_frame_size(spaceship_frame)
         
         #readcontrols
         d_row, d_column, space_pressed = read_controls(canvas)
@@ -45,7 +46,7 @@ async def animate_spaceship(canvas, start_row, start_column):
         #validate position and make corrections
         row, column = adjust_sprite_position(
             max_row, max_column,
-            sprite_hight, sprite_width,
+            rocket_hight, rocket_width,
             row, column
         )
         #draw frames
@@ -57,6 +58,11 @@ async def animate_spaceship(canvas, start_row, start_column):
             shot = fire(canvas, row, column + 2)
             COROUTINES.append(shot)
 
+        #check collison
+        for obstacle in OBSTACLES:
+            if obstacle.has_collision(row, column, rocket_hight, rocket_width):
+                COROUTINES.append(show_gameover(canvas))
+                return   
 
 
 def update_spaceship_frame():
