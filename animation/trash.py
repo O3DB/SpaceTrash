@@ -9,8 +9,7 @@ from .curses_tools import (
     get_frame_size,
 )
 from .obstacles import Obstacle, show_obstacles
-from . import COROUTINES
-from . import OBSTACLES, OBSTACLES_IN_LAST_COLLISION
+from . import COROUTINES, OBSTACLES, OBSTACLES_IN_LAST_COLLISION, GARBAGE_DELAY
 from .explosion import explode
 
 
@@ -39,11 +38,11 @@ async def fly_trash(canvas, column, garbage_frame, speed=0.5):
 
 
 
-async def fill_orbit_with_trash(canvas, speed=20):
+async def fill_orbit_with_trash(canvas):
     """Generate trash flow"""
     trash_sprites = upload_sprite('trash')
     max_row, max_column = canvas.getmaxyx()
-
+    global GARBAGE_DELAY
     #remove then
     COROUTINES.append(show_obstacles(canvas, OBSTACLES))
     while True:
@@ -53,4 +52,4 @@ async def fill_orbit_with_trash(canvas, speed=20):
         coroutine = fly_trash(canvas, start_column, sprite)
         COROUTINES.append(coroutine)
 
-        await sleep(speed)
+        await sleep(GARBAGE_DELAY)
