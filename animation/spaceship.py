@@ -43,12 +43,14 @@ async def animate_spaceship(canvas, start_row, start_column):
         PHYSICS['column_speed'] = column_speed
         row += row_speed
         column += column_speed
+
         #validate position and make corrections
         row, column = adjust_sprite_position(
             max_row, max_column,
             rocket_hight, rocket_width,
             row, column
         )
+
         #draw frames
         draw_frame(canvas, round(row), round(column), spaceship_frame)
         await asyncio.sleep(0)
@@ -73,12 +75,6 @@ def update_spaceship_frame():
     global SPACESHIP_FRAMES
     frame = SPACESHIP_FRAMES.pop(0)
     SPACESHIP_FRAMES.append(frame)
-
-
-# async def animate_spaceship(canvas, start_row, start_column, speed=5):
-#     while True:
-#         await run_spaceship(canvas, start_row, start_column, speed)
-#         await update_spaceship_frame()
 
 
 
