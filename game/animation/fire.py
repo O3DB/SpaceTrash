@@ -2,7 +2,7 @@ import asyncio
 import curses
 
 from .obstacles import Obstacle
-from . import OBSTACLES, OBSTACLES_IN_LAST_COLLISION
+from ..global_variables import obstacles, obstacles_in_last_collision
 
 
 async def fire(canvas, start_row, start_column, rows_speed=-1, columns_speed=0):
@@ -32,12 +32,9 @@ async def fire(canvas, start_row, start_column, rows_speed=-1, columns_speed=0):
         # check for collision
         await asyncio.sleep(0)
         canvas.addstr(round(row), round(column), ' ')
-        for obstacle in OBSTACLES:
+        for obstacle in obstacles:
             if obstacle.has_collision(row, column):
-                OBSTACLES_IN_LAST_COLLISION.append(obstacle)
+                obstacles_in_last_collision.append(obstacle)
                 return    
         row += rows_speed
         column += columns_speed
-
-def fill_orbit_with_trash():
-    pass

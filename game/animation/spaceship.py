@@ -10,7 +10,7 @@ from .curses_tools import (
 )
 from .physics import update_speed
 from .fire import fire
-from . import COROUTINES, OBSTACLES
+from ..global_variables import coroutines, obstacles, globals
 from .gameover import show_gameover
 
 PHYSICS = {
@@ -56,14 +56,15 @@ async def animate_spaceship(canvas, start_row, start_column):
         await asyncio.sleep(0)
         draw_frame(canvas, round(row), round(column), spaceship_frame, negative=True)
 
-        if space_pressed:
+        # make a shot
+        if space_pressed and globals['shotgun_exists']:
             shot = fire(canvas, row, column + 2)
-            COROUTINES.append(shot)
+            coroutines.append(shot)
 
         #check collison
-        for obstacle in OBSTACLES:
+        for obstacle in obstacles:
             if obstacle.has_collision(row, column, rocket_hight, rocket_width):
-                COROUTINES.append(show_gameover(canvas))
+                coroutines.append(show_gameover(canvas))
                 return   
 
 

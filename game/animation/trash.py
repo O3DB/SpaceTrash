@@ -9,7 +9,7 @@ from .curses_tools import (
     get_frame_size,
 )
 from .obstacles import Obstacle, show_obstacles
-from . import COROUTINES, OBSTACLES, OBSTACLES_IN_LAST_COLLISION, GARBAGE_DELAY
+from ..global_variables import coroutines, obstacles, obstacles_in_last_collision, globals
 from .explosion import explode
 
 
@@ -21,36 +21,37 @@ async def fly_trash(canvas, column, garbage_frame, speed=0.5):
     column = min(column, columns_number - 1)
 
     row = 1
+    obstacle = Obstacle(row, column, *get_frame_size(garbage_frame))
+    obstacles.append(obstacle)
 
     while row < rows_number:
-        draw_frame(canvas, row, column, garbage_frame)
-
-        obstacle = Obstacle(row, column, *get_frame_size(garbage_frame))
-        OBSTACLES.append(obstacle)
-
-        await asyncio.sleep(0)
-
-        draw_frame(canvas, row, column, garbage_frame, negative=True)
-        row += speed
-        OBSTACLES.pop(0)
-
-        if obstacle in OBSTACLES_IN_LAST_COLLISION:
-            OBSTACLES_IN_LAST_COLLISION.remove(obstacle)
-            COROUTINES.append(explode(canvas, *obstacle.get_center()))
+        if obstacle in obstacles_in_last_collision:
+            obstacles_in_last_collision.remove(obstacle)
+            await explode(canvas, *obstacle.get_center())
             return
+
+        draw_frame(canvas, row, column, garbage_frame)
+        await asyncio.sleep(0)
+        draw_frame(canvas, row, column, garbage_frame, negative=True)
+
+        row += speed
+        obstacle.row = row
+    
+    obstacles.remove(obstacle)
+
 
 
 async def fill_orbit_with_trash(canvas):
     """Generate trash flow"""
-    global GARBAGE_DELAY
     trash_sprites = upload_sprite('trash')
     max_row, max_column = canvas.getmaxyx()
    
     while True:
         sprite = random.choice(trash_sprites)
-        start_column = random.randint(1, max_column - 1)
+        _, sprite_width = get_frame_size(sprite)
+        start_column = random.randint(1, max_column - 1 - sprite_width)
 
         coroutine = fly_trash(canvas, start_column, sprite)
-        COROUTINES.append(coroutine)
+        coroutines.append(coroutine)
 
-        await sleep(GARBAGE_DELAY)
+        await sleep(globals['garbage_delay'])
