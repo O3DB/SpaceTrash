@@ -87,7 +87,7 @@ def get_frame_size(text):
     return rows, columns
 
 
-def upload_sprite(sprite_name, dirname='sprites'):
+def load_sprite(sprite_name, dirname='sprites'):
     pattern = os.path.join(dirname, f'{sprite_name}*')
     filenames = glob.glob(pattern)
     frames = []
