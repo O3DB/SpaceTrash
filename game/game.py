@@ -6,7 +6,7 @@ from .animation.fire import fire
 from .animation.spaceship import animate_spaceship
 from .animation.stars import animate_stars
 from .animation.trash import fill_orbit_with_trash
-from .animation.curses_tools import upload_sprite
+from .animation.curses_tools import load_sprite
 from .game_scenario import run_scenario
 from .global_variables import coroutines
 from .settings import GameConfig

@@ -2,7 +2,7 @@ import asyncio
 import curses
 
 from .curses_tools import (
-    upload_sprite,
+    load_sprite,
     draw_frame,
     read_controls,
     get_frame_size,
@@ -18,7 +18,7 @@ PHYSICS = {
     'column_speed': 0,
 }
 
-SPACESHIP_FRAMES = upload_sprite('rocket')
+SPACESHIP_FRAMES = load_sprite('rocket')
 # SPACESHIP_FRAME = '12'
 
 async def animate_spaceship(canvas, start_row, start_column):

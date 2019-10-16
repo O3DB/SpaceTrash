@@ -3,7 +3,7 @@ import curses
 import random
 
 from .curses_tools import (
-    upload_sprite,
+    load_sprite,
     sleep,
     draw_frame,
     get_frame_size,
@@ -24,26 +24,27 @@ async def fly_trash(canvas, column, garbage_frame, speed=0.5):
     obstacle = Obstacle(row, column, *get_frame_size(garbage_frame))
     obstacles.append(obstacle)
 
-    while row < rows_number:
-        if obstacle in obstacles_in_last_collision:
-            obstacles_in_last_collision.remove(obstacle)
-            await explode(canvas, *obstacle.get_center())
-            return
+    try:
+        while row < rows_number:
+            if obstacle in obstacles_in_last_collision:
+                obstacles_in_last_collision.remove(obstacle)
+                await explode(canvas, *obstacle.get_center())
+                break
 
-        draw_frame(canvas, row, column, garbage_frame)
-        await asyncio.sleep(0)
-        draw_frame(canvas, row, column, garbage_frame, negative=True)
+            draw_frame(canvas, row, column, garbage_frame)
+            await asyncio.sleep(0)
+            draw_frame(canvas, row, column, garbage_frame, negative=True)
 
-        row += speed
-        obstacle.row = row
-    
-    obstacles.remove(obstacle)
-
-
+            row += speed
+            obstacle.row = row
+            # print(len(obstacles))
+    finally:
+        obstacles.remove(obstacle)
+        return
 
 async def fill_orbit_with_trash(canvas):
     """Generate trash flow"""
-    trash_sprites = upload_sprite('trash')
+    trash_sprites = load_sprite('trash')
     max_row, max_column = canvas.getmaxyx()
    
     while True:
