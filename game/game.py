@@ -34,12 +34,12 @@ def draw(canvas):
             
             try:
                 coroutine.send(None)
-                canvas.refresh()
-                canvas.border('|', '|')
 
             except StopIteration:
                 coroutines.remove(coroutine)
 
+        canvas.refresh()
+        canvas.border('|', '|')
         time.sleep(GameConfig.game_speed)
             
 

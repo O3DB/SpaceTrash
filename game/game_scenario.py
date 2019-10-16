@@ -43,6 +43,7 @@ def draw_info_bar(canvas, year):
     column = max_column // 2 - len(text) // 2
 
     canvas.clear()
+    canvas.box()
     canvas.addstr(row, column, text)
 
 
